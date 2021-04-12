@@ -6,18 +6,19 @@ import java.util.List;
 public class Regine
 {
 	private int N;
-	private List<Integer[]> soluzioni;
+	private List<Integer> soluzione;
 	
 	
-	public List<Integer[]> risolvi(int N) 
+	public List<Integer> risolvi(int N) 
 	{
 		this.N = N;
-		List<Integer[]> soluzioni = new ArrayList<>();
+		@SuppressWarnings("unused")
+		List<Integer> soluzione = new ArrayList<>();
 		
 		List<Integer> soluzioneParziale = new ArrayList<>();
 		cerca(soluzioneParziale, 0);
 		
-		return this.soluzioni;
+		return this.soluzione;
 	}
 	
 	//scacchiera N x N
@@ -33,11 +34,12 @@ public class Regine
 	// 				[0, 2, 1] ....
 	
 	//cerca == true : trovato; cerca == false : cerca ancora
-	private void cerca(List<Integer> parziale, int livello)
+	private boolean cerca(List<Integer> parziale, int livello)
 	{
 		if(livello == N)
 		{
-			this.soluzioni.add(parziale.toArray(new Integer[N]));
+			this.soluzione = new ArrayList<Integer>(parziale);
+			return true;
 		}
 		else 
 		{
@@ -49,11 +51,15 @@ public class Regine
 				if(posizioneValida(parziale,colonna))
 				{
 					parziale.add(colonna);	//[0, 6, 4, 6, XXX]
-					cerca(parziale, livello+1);
+					boolean trovato = cerca(parziale, livello+1);
 					
-					parziale.remove(parziale.size()-1); //backtracking
+					if(trovato)
+						return true;
+					else
+						parziale.remove(parziale.size()-1); //backtracking
 				}
 			}
+			return false;
 		}
 	}
 	
