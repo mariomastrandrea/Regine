@@ -1,5 +1,6 @@
 package it.polito.tdp.regine.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Regine {
@@ -16,16 +17,65 @@ public class Regine {
 	// [0]
 	//     [0, 2]
 	//            [0, 2, 1]
+	private int N ;
+	private List<Integer> soluzione ;
 	
-	private void cerca(List<Integer>parziale, int livello) {
+	public List<Integer> risolvi(int N) {
+		this.N = N ;
+		List<Integer> parziale = new ArrayList<Integer>() ;
+		this.soluzione = null ;
+		
+		cerca(parziale, 0); 
+		
+		return this.soluzione ;
+	}
+	
+	// cerca == true : trovato; cerca == false : cerca ancora
+	private boolean cerca(List<Integer>parziale, int livello) {  // [0, 6, 4, 7]
 		if(livello==N) {
 			// caso terminale
+//			System.out.println(parziale);
+			this.soluzione = new ArrayList<>(parziale) ;
+			return true;
 		} else {
 			for(int colonna=0; colonna<N; colonna++) {
 				// if la possa nella casella [livello][colonna] è valida
 				// se sì, aggiungi a parziale e fai ricorsione
+				
+				if( posValida(parziale, colonna) ) {
+					
+//					List<Integer> parzialeNuovo = new ArrayList<>(parziale) ;
+//					parzialeNuovo.add(colonna) ;
+//					cerca(parzialeNuovo, livello+1) ;
+					
+					parziale.add(colonna) ; // [0, 6, 4, 7, XXX ] 
+					boolean trovato = cerca(parziale, livello+1) ;
+					if(trovato)
+						return true ;
+					parziale.remove(parziale.size()-1) ; // backtracking
+				}
 			}
+			return false ;
 		}
+	}
+
+	private boolean posValida(List<Integer> parziale, int colonna) {
+		int livello = parziale.size();
+		
+		// controlla se viene mangiata in verticale
+		if(parziale.contains(colonna))
+			return false ;
+		
+		// controlla le diagonali: confronta la posizione (livello, colonna) con (r,c) delle
+		// regine esistenti
+		for(int r=0; r<livello; r++) {
+			int c = parziale.get(r) ;
+			
+			if(r+c == livello+colonna || r-c == livello-colonna)
+				return false ;
+		}
+		
+		return true;
 	}
 	
 	
