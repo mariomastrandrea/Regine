@@ -18,25 +18,24 @@ public class Regine {
 	//     [0, 2]
 	//            [0, 2, 1]
 	private int N ;
-	private List<Integer> soluzione ;
+	private List<List<Integer>> soluzioni ;
 	
-	public List<Integer> risolvi(int N) {
+	public List<List<Integer>> risolvi(int N) {
 		this.N = N ;
 		List<Integer> parziale = new ArrayList<Integer>() ;
-		this.soluzione = null ;
+		this.soluzioni = new ArrayList<>();
 		
 		cerca(parziale, 0); 
 		
-		return this.soluzione ;
+		return this.soluzioni ;
 	}
 	
 	// cerca == true : trovato; cerca == false : cerca ancora
-	private boolean cerca(List<Integer>parziale, int livello) {  // [0, 6, 4, 7]
+	private void cerca(List<Integer>parziale, int livello) {  // [0, 6, 4, 7]
 		if(livello==N) {
 			// caso terminale
 //			System.out.println(parziale);
-			this.soluzione = new ArrayList<>(parziale) ;
-			return true;
+			this.soluzioni.add(new ArrayList<>(parziale)) ;
 		} else {
 			for(int colonna=0; colonna<N; colonna++) {
 				// if la possa nella casella [livello][colonna] è valida
@@ -49,13 +48,10 @@ public class Regine {
 //					cerca(parzialeNuovo, livello+1) ;
 					
 					parziale.add(colonna) ; // [0, 6, 4, 7, XXX ] 
-					boolean trovato = cerca(parziale, livello+1) ;
-					if(trovato)
-						return true ;
+					cerca(parziale, livello+1) ;
 					parziale.remove(parziale.size()-1) ; // backtracking
 				}
 			}
-			return false ;
 		}
 	}
 
