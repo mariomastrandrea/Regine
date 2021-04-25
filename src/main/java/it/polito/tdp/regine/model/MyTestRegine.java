@@ -27,11 +27,13 @@ public class MyTestRegine
 		}
 		*/
 		
-		MyRegineModel model = new MyRegineModel();
+		MyRegineModel model = new MyRegineModel();	
+		Set<Integer[]> myQueensCombinations = model.computeCombinations(8);
 		
-		Set<Integer[]> queensCombinations = model.computeCombinations(8);
+		Regine otherModel = new Regine();
+		List<Integer[]> otherCombinations = otherModel.risolvi(8);
 		
-		System.out.println(print(queensCombinations));
+		System.out.println(printAndCheck(myQueensCombinations, otherCombinations));
 	}
 	
 	public static String print(Set<Integer[]> set)
@@ -58,16 +60,76 @@ public class MyTestRegine
 		return sb.toString();
 	}
 	
-	public static boolean areTheSame(Integer[] array, List<Integer> list)
+	public static String printAndCheck(Set<Integer[]> set, List<Integer[]> otherSolution)
 	{
-		if(array.length != list.size())
+		StringBuilder sb = new StringBuilder();
+		for(Integer[] array : set)
+		{
+			if(sb.length() > 0)
+				sb.append("\n");
+			
+			StringBuilder row = new StringBuilder();
+			for(Integer i : array)
+			{
+				if(row.length() > 0)
+					row.append(", ");
+				
+				row.append(i);
+			}
+			row.insert(0,"[").append("]").append("  -->  ");
+			
+			if(existCombinationLike(array, otherSolution))
+				row.append("exists");
+			else
+				row.append("DOES NOT EXIST");
+			
+			sb.append(row);
+		}
+		
+		int mySolutionSize = set.size();
+		sb.append("\n\nCount: ").append(mySolutionSize).append("  -->  ");
+		
+		if(mySolutionSize == otherSolution.size())
+			sb.append("ok");
+		else
+			sb.append("ERROR!");
+		
+		return sb.toString();
+	}
+	
+	public static boolean areTheSame(Integer[] myArray, Integer[] other)
+	{
+		if(myArray.length != other.length)
 			return false;
 		
-		for(int i=0; i<list.size(); i++)
-			if(array[i] == null || !list.get(i).equals(array[i]))
+		for(int col=0; col<myArray.length; col++)
+		{
+			Integer row = myArray[col];
+			if(row == null)
 				return false;
-		
+			
+			if(!(row >= 0 && row < other.length))
+				return false;
+			
+			Integer otherCol = other[row];
+			
+			if(otherCol == null)
+				return false;
+			
+			if(col != otherCol)
+				return false;
+		}
 		return true;
+	}
+	
+	public static boolean existCombinationLike(Integer[] myCombination, List<Integer[]> list)
+	{
+		for(Integer[] otherCombination : list)
+		{
+			if(areTheSame(myCombination, otherCombination))
+				return true;
+		}
+		return false;
 	}
 
 }
