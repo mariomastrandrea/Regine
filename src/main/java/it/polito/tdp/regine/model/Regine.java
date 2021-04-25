@@ -12,6 +12,7 @@ public class Regine
 	public List<Integer[]> risolvi(int N) 
 	{
 		this.N = N;
+		@SuppressWarnings("unused")
 		List<Integer[]> soluzioni = new ArrayList<>();
 		
 		List<Integer> soluzioneParziale = new ArrayList<>();

@@ -6,6 +6,7 @@ import java.util.List;
 public class TestRegine
 {
 
+	@SuppressWarnings("unused")
 	public static void main(String[] args)
 	{
 		Regine r = new Regine();
